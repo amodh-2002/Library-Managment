@@ -1,0 +1,11 @@
+Flask==2.0.1
+Flask-SQLAlchemy==2.5.1
+Flask-Migrate==3.1.0
+Flask-CORS==3.0.10
+marshmallow==3.14.1
+python-dotenv==0.19.2
+requests==2.27.1
+pytest==7.1.1
+mysqlclient==2.1.1
+SQLAlchemy==1.4.36
+Werkzeug==2.0.1
