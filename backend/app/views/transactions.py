@@ -96,3 +96,13 @@ def return_book(transaction_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 400
+
+@bp.route('', methods=['OPTIONS'])
+@bp.route('/issue', methods=['OPTIONS'])
+@bp.route('/return/<int:transaction_id>', methods=['OPTIONS'])
+def handle_options(transaction_id=None):
+    response = make_response()
+    response.headers.add('Access-Control-Allow-Origin', request.origin)  # Dynamic origin
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+    response.headers.add('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS')
+    return response

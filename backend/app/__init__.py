@@ -11,9 +11,14 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     
-    # Simple CORS configuration
+    # Configure CORS with multiple origins
     CORS(app, 
-         resources={r"/api/*": {"origins": "http://localhost:5173"}},
+         resources={r"/api/*": {
+             "origins": [
+                 "http://localhost:5173",
+                 "https://lib.amobitsx7.tech"
+             ]
+         }},
          allow_headers=["Content-Type"],
          methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
     )

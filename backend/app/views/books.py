@@ -8,7 +8,7 @@ bp = Blueprint('books', __name__, url_prefix='/api/books')
 @bp.route('/<int:book_id>', methods=['OPTIONS'])
 def handle_options(book_id=None):
     response = make_response()
-    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:5173')
+    response.headers.add('Access-Control-Allow-Origin', request.origin)
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
     response.headers.add('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
     return response
