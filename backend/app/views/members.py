@@ -8,7 +8,7 @@ bp = Blueprint('members', __name__, url_prefix='/api/members')
 @bp.route('/<int:member_id>', methods=['OPTIONS'])
 def handle_options(member_id=None):
     response = make_response()
-    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:5173')
+    response.headers.add('Access-Control-Allow-Origin', request.origin)  # Dynamic origin
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
     response.headers.add('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
     return response

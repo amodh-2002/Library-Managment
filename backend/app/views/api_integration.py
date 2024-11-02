@@ -1,10 +1,18 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, make_response
 import requests
 from ..models import Book, db
 
 bp = Blueprint('api_integration', __name__, url_prefix='/api/frappe')
 
 FRAPPE_API_URL = 'https://frappe.io/api/method/frappe-library'
+
+@bp.route('/import', methods=['OPTIONS'])
+def handle_options():
+    response = make_response()
+    response.headers.add('Access-Control-Allow-Origin', request.origin)  # Dynamic origin
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+    response.headers.add('Access-Control-Allow-Methods', 'POST, OPTIONS')
+    return response
 
 @bp.route('/import', methods=['POST'])
 def import_books():
