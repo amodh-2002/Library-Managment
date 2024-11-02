@@ -22,7 +22,7 @@ export const api = {
   createBook: (book) => axiosInstance.post('/books', book),
   updateBook: (id, book) => axiosInstance.put(`/books/${id}`, book),
   deleteBook: (id) => axiosInstance.delete(`/books/${id}`),
-  importBooks: (params) => axiosInstance.post('/books/import', params),
+  importBooks: (books) => axiosInstance.post('/books/import', books),
 
   // Members
   getMembers: () => axiosInstance.get('/members'),
