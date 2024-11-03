@@ -182,7 +182,6 @@ VITE_API_URL=http://localhost:5000/api
 
 ## Acknowledgments
 
-- [Frappe Library API](https://frappe.io/api/method/frappe-library) for book data
 - [Tailwind CSS](https://tailwindcss.com/) for styling
 - [React Icons](https://react-icons.github.io/react-icons/) for icons
 
