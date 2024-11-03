@@ -65,6 +65,13 @@ def book_operations(book_id):
             
     if request.method == 'DELETE':
         try:
+            # Only check for active transactions
+            active_transactions = [t for t in book.transactions if t.return_date is None]
+            if active_transactions:
+                return jsonify({
+                    'error': 'Cannot delete book that is currently borrowed'
+                }), 400
+                
             db.session.delete(book)
             db.session.commit()
             return jsonify({'message': 'Book deleted successfully'})
@@ -76,6 +83,9 @@ def book_operations(book_id):
 def import_books():
     try:
         books_data = request.get_json()
+        if not isinstance(books_data, list):
+            books_data = [books_data]  # Convert single book to list
+            
         imported_count = 0
         skipped_count = 0
         errors = []
@@ -85,12 +95,13 @@ def import_books():
                 # Check if book already exists
                 existing_book = Book.query.filter_by(isbn=book_data['isbn']).first()
                 if not existing_book:
-                    # Truncate author and publisher if too long
-                    author = book_data['authors'][:500] if len(book_data['authors']) > 500 else book_data['authors']
-                    publisher = book_data['publisher'][:200] if len(book_data['publisher']) > 200 else book_data['publisher']
+                    # Clean and truncate the data
+                    title = book_data['title'][:200].encode('utf-8').decode('utf-8')
+                    author = book_data['authors'][:500].encode('utf-8').decode('utf-8')
+                    publisher = book_data['publisher'][:200].encode('utf-8').decode('utf-8') if book_data.get('publisher') else None
                     
                     book = Book(
-                        title=book_data['title'][:200],  # Also limit title
+                        title=title,
                         author=author,
                         isbn=book_data['isbn'],
                         publisher=publisher,
@@ -104,7 +115,12 @@ def import_books():
                 errors.append(f"Error importing book {book_data.get('title', 'Unknown')}: {str(e)}")
                 continue
         
-        db.session.commit()
+        if imported_count > 0:
+            try:
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                return jsonify({'error': f"Database error: {str(e)}"}), 400
         
         message = f'Successfully imported {imported_count} books'
         if skipped_count > 0:

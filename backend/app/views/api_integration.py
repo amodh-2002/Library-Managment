@@ -43,23 +43,33 @@ def import_books():
 
     try:
         books_data = request.json
+        if not isinstance(books_data, list):
+            books_data = [books_data]  # Convert single book to list
+            
         imported_count = 0
         
         for book_data in books_data:
             # Check if book already exists
             existing_book = Book.query.filter_by(isbn=book_data['isbn']).first()
             if not existing_book:
+                # Clean and truncate the data
+                title = book_data['title'][:200].encode('utf-8').decode('utf-8')
+                author = book_data['authors'][:500].encode('utf-8').decode('utf-8')
+                publisher = book_data['publisher'][:200].encode('utf-8').decode('utf-8') if book_data.get('publisher') else None
+                
                 book = Book(
-                    title=book_data['title'],
-                    author=book_data['authors'],
+                    title=title,
+                    author=author,
                     isbn=book_data['isbn'],
-                    publisher=book_data['publisher'],
+                    publisher=publisher,
                     stock=1  # Default stock value
                 )
                 db.session.add(book)
                 imported_count += 1
         
-        db.session.commit()
+        if imported_count > 0:
+            db.session.commit()
+            
         return jsonify({
             'message': f'Successfully imported {imported_count} books'
         }), 201

@@ -63,8 +63,9 @@ def member_operations(member_id):
                     'error': f'Cannot delete member with outstanding debt of Rs. {member.outstanding_debt}'
                 }), 400
                 
-            # Check if member has active transactions
-            if any(not t.return_date for t in member.transactions):
+            # Only check for active transactions
+            active_transactions = [t for t in member.transactions if t.return_date is None]
+            if active_transactions:
                 return jsonify({
                     'error': 'Cannot delete member with active book loans'
                 }), 400

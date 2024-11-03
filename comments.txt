@@ -4,3 +4,7 @@ flask db migrate -m "Initial migration"
 flask db upgrade
 
 pip install mysqlclient
+
+(MySQLdb.OperationalError) (1048, "Column 'book_id' cannot be null") [SQL: UPDATE transaction SET book_id=%s WHERE transaction.id = %s] [parameters: ((None, 1), (None, 2))] (Background on this error at: https://sqlalche.me/e/14/e3q8)
+
+(MySQLdb.OperationalError) (1048, "Column 'member_id' cannot be null") [SQL: UPDATE transaction SET member_id=%s WHERE transaction.id = %s] [parameters: (None, 2)] (Background on this error at: https://sqlalche.me/e/14/e3q8)
